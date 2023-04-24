@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:local_storage/model/note.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -47,6 +49,53 @@ class NoteDatabase {
 
   )
 ''');
+  }
+
+  // this function create individual note
+
+  Future<Note> create(Note note) async {
+    final db = await instance.database;
+
+    final json = note.toJson();
+
+    // if we want to write our own sql code
+    // access the column
+
+    // final columns =
+    //     '${NoteFields.titile}, ${NoteFields.description}, ${NoteFields.time}';
+    // final values =
+    //     '${json[NoteFields.titile]}, ${json[NoteFields.description]}, ${json[NoteFields.time]}';
+
+    final id = await db.insert(tableNotes, note.toJson());
+
+    return note.copy(id: id);
+  }
+
+//  this function help us to read individual Note from the db
+  Future<Note> readNote(int id) async {
+    final db = await instance.database;
+
+    final maps = await db.query(
+      tableNotes,
+      columns: NoteFields.values,
+      // ? prevent the sql injection
+      where: '${NoteFields.id} = ?',
+      whereArgs: [id],
+    );
+
+    if (maps.isNotEmpty) {
+      return Note.fromJson(maps.first);
+    } else {
+      throw Exception('ID $id not found');
+    }
+  }
+
+  Future<List<Note>> readAllNotes() async {
+    final db = await instance.database;
+    final orderBy = '${NoteFields.time} ASC';
+    final results = await db.query(tableNotes, orderBy: orderBy);
+
+    return results.map((json) => Note.fromJson(json)).toList();
   }
 
   Future close() async {
