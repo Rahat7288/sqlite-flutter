@@ -7,13 +7,13 @@ class NoteFields {
     isImportant,
     number,
     time,
-    titile,
+    title,
     description,
   ];
   static final String id = '_id';
   static final String isImportant = 'isImportant';
   static final String number = 'number';
-  static final String titile = 'title';
+  static final String title = 'title';
   static final String description = 'description';
   static final String time = 'time';
 }
@@ -55,7 +55,7 @@ class Note {
         id: json[NoteFields.id] as int?,
         isImportant: json[NoteFields.isImportant] == 1,
         number: json[NoteFields.number] as int,
-        title: json[NoteFields.titile] as String,
+        title: json[NoteFields.title] as String,
         description: json[NoteFields.description] as String,
         createdTime: DateTime.parse(json[NoteFields.time] as String),
       );
@@ -64,7 +64,7 @@ class Note {
 
   Map<String, Object?> toJson() => {
         NoteFields.id: id,
-        NoteFields.titile: title,
+        NoteFields.title: title,
         NoteFields.description: description,
         NoteFields.number: number,
         NoteFields.isImportant: isImportant ? 1 : 0,
