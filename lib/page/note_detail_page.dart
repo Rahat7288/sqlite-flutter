@@ -32,9 +32,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          actions: [
-            editButton(),
-          ],
+          actions: [editButton(), deleteButton(),]
         ),
         body: isLoading
             ? Center(
@@ -87,6 +85,14 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
       },
       icon: Icon(Icons.edit_outlined));
 }
+Widget deleteButton() => IconButton(
+        icon: Icon(Icons.delete),
+        onPressed: () async {
+          await NotesDatabase.instance.delete(widget.noteId);
+
+          Navigator.of(context).pop();
+        },
+      );
 
 // Widget deleteButton() => IconButton(onPressed: () async {
 //   await NoteDatabase.
